@@ -54,5 +54,35 @@ void handleCommand() {
 
 int main()
 {
+    enableRawMode();
+    printf("Vim-like Editor (ESC to Command Mode, :wq to save & exit)\n");
 
+    int ch;
+    while (1) {
+        ch = getchar();
+
+        if (command_mode) {
+            if (ch == '\n') {
+                handleCommand();
+            } else if (ch == BACKSPACE && cmd_index > 0) { 
+                cmd_index--;  
+                printf("\b \b"); 
+            } else {
+                command[cmd_index++] = ch;
+                putchar(ch);
+            }
+        } else {
+            if (ch == ESC) {
+                command_mode = 1;
+                printf("\n:");
+            } else if (ch == BACKSPACE && cursor > 0) { 
+                cursor--;  
+                printf("\b \b");
+            } else {
+                text[cursor++] = ch;
+                putchar(ch);
+            }
+        }
+    }
+    return 0;
 }
